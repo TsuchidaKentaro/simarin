@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: Send notification to Google Chat
         env:
-          GCHAT_WEBHOOK_URL: ${{ secrets.GCHAT_WEBHOOK_URL }}
+          $SIMARIN_PROJECT: ${{ secrets.SIMARIN_PROJECT }}
         run: |
           curl -X POST -H 'Content-Type: application/json' -d '{
             "text": "New pull request: ${{ github.event.pull_request.title }} by ${{ github.event.pull_request.user.login }}. URL: ${{ github.event.pull_request.html_url }}"
-          }' $GCHAT_WEBHOOK_URL
+          }' $SIMARIN_PROJECT
