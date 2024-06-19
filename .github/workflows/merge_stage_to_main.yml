@@ -1,33 +1,22 @@
-name: Merge stage to main
+name: Auto Merge to Stage Branch
 
 on:
   push:
     branches:
-      - stage
+      - main
 
 jobs:
-  merge:
+  merge_to_stage:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        ref: stage
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
 
-    - name: Set up Git
-      run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-
-    - name: Create merge commit
-      run: |
-        git fetch origin main
-        git checkout main
-        git merge --no-ff stage -m "Automated merge from stage to main"
-
-    - name: Push changes
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
-        git push origin main
+      - name: Merge to stage branch
+        run: |
+          git checkout stage
+          git pull origin stage
+          git merge --no-ff ${{ github.sha }}
+          git push origin stage
