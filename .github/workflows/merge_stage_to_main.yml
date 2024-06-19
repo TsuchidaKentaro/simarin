@@ -20,14 +20,17 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
 
-    - name: Create merge commit
+    - name: Fetch main branch
+      run: git fetch origin main
+
+    - name: Merge stage into main
       run: |
-        git fetch origin main
         git checkout main
-        git merge --no-ff stage -m "Automated merge from stage to main"
+        git merge --no-ff ${{ github.event.ref }} -m "Automated merge from stage to main"
 
     - name: Push changes
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         git push origin main
+
